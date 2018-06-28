@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yedam.web.emp.EmpDAO">
+
+	<resultMap type="empVO" id="empResult">
+		<id property="employeeId" column="EMPLOYEE_ID"/>
+		<result property="firstName" column="FIRST_NAME"/>
+		<result property="lastName" column="LAST_NAME" />
+		<result property="salary" column="SALARY"/>
+		<result property="jobId" column="JOB_ID"/>
+	</resultMap>
+
+	<select id="getEmp" resultMap="empResult"  parameterType="string">
+		<![CDATA[
+		SELECT EMPLOYEE_ID
+		      ,FIRST_NAME
+		      ,LAST_NAME
+		      ,SALARY
+		FROM   HR.EMPLOYEES
+		WHERE  EMPLOYEE_ID = #{id}
+		]]>
+	</select>
+
+
+	<select id="getEmpList" resultType="map">
+		<![CDATA[
+		SELECT EMPLOYEE_ID  as "employeeId"
+		      ,FIRST_NAME   as "firstName"
+		      ,LAST_NAME    as "lastName"
+		      ,SALARY       as "salary"
+		      ,JOB_ID       as "jobId"
+		      ,EMAIL        as "email"
+		      ,DEPARTMENT_ID as "departmentId"
+		      ,(SELECT DEPARTMENT_NAME
+		        FROM   HR.DEPARTMENTS D
+		        WHERE D.DEPARTMENT_ID = E.DEPARTMENT_ID) as "departmentName"
+		FROM HR.EMPLOYEES E
+		]]>
+		<where>
+		<if test="departmentId != null and departmentId != ''">
+			e.department_id = #{departmentId}
+		</if>
+		<if test="firstName != null and firstName != ''">
+			e.first_name like '%'||#{firstName}||'%'
+		</if>
+		</where>
+		ORDER BY EMPLOYEE_ID
+	</select>
+
+	<insert id="insertEmp" parameterType="empVO">
+		<selectKey keyProperty="employeeId" resultType="string" order="BEFORE">
+			select max(employee_id)+1 from employees
+		</selectKey>
+		<![CDATA[
+		INSERT INTO HR.EMPLOYEES
+    			(EMPLOYEE_ID
+			    ,FIRST_NAME
+			    ,LAST_NAME
+			    ,EMAIL
+			    ,HIRE_DATE
+			    ,JOB_ID)
+			VALUES
+			    (#{employeeId}
+			    ,#{firstName}
+			    ,#{lastName}
+			    ,#{email}
+			    ,#{hireDate}
+			    ,#{jobId})
+		]]>
+	</insert>
+
+	<update id="updateEmp" parameterType="empVO" >
+		<![CDATA[
+		UPDATE HR.EMPLOYEES
+		SET    FIRST_NAME = #{firstName}
+		      ,LAST_NAME  = #{lastName}
+		      ,EMAIL      = #{email}
+		      ,HIRE_DATE  = #{hireDate}
+		      ,JOB_ID     = #{jobId}
+		WHERE  EMPLOYEE_ID = #{employeeId}
+		]]>
+	</update>
+	
+	<delete id="deleteEmp" parameterType="string">
+		<![CDATA[
+		DELETE FROM HR.EMPLOYEES
+		WHERE  EMPLOYEE_ID = #{id}
+		]]>
+	</delete>
+
+	<delete id="deleteEmpList">
+		DELETE FROM HR.DEPARTMENTS
+		WHERE DEPARTMENT_ID IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getDeptCnt" resultType="map">
+		SELECT d.department_name AS "department_name"
+		      ,COUNT(*) AS "cnt"
+		FROM   hr.employees e
+		JOIN   hr.departments d
+		ON     e.department_id = d.department_id
+		GROUP  BY d.department_name
+	</select>
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="comments">
+
+	<select id="getComments" parameterType="string" resultType="com.yedam.web.board.CommentsVO">
+		SELECT SEQ, NAME, CONTENT, BOARD_SEQ, REGDATE FROM COMMENTS WHERE SEQ = #{seq}
+	</select>
+
+	<select id="getCommentsList" resultType="map">
+		SELECT SEQ, NAME, CONTENT, BOARD_SEQ, REGDATE 
+		FROM COMMENTS
+		<where>
+		<if test="boardSeq != null and boardSeq != ''">
+			AND BOARD_SEQ = ${boardSeq}
+		</if>
+		</where>
+		ORDER BY 1 DESC
+	</select>
+
+	<select id="getCommentsList2" parameterType="com.yedam.web.board.CommentsVO" resultType="com.yedam.web.board.CommentsVO">
+		SELECT SEQ, NAME, CONTENT, BOARD_SEQ, REGDATE
+		FROM COMMENTS
+		<where>
+		<if test="boardSeq != null and boardSeq != ''">
+			AND BOARD_SEQ = ${boardSeq}
+		</if>
+		</where>
+		ORDER BY 1 DESC
+	</select>
+
+	<insert id="insertComments" parameterType="com.yedam.web.board.CommentsVO">
+		<selectKey keyProperty="seq" resultType="string" order="BEFORE">
+			SELECT NVL(MAX(SEQ),0)+1 FROM COMMENTS
+		</selectKey>
+		INSERT INTO COMMENTS (SEQ, NAME, CONTENT, BOARD_SEQ, REGDATE)
+		VALUES (#{seq},#{name},#{content},#{boardSeq},SYSDATE)
+	</insert>
+
+	<update id="updateComments" parameterType="com.yedam.web.board.CommentsVO">
+		UPDATE COMMENTS
+		SET CONTENT=#{content}
+		WHERE SEQ=#{seq}
+	</update>
+
+	<delete id="deleteComments" parameterType="com.yedam.web.board.CommentsVO">
+		DELETE FROM COMMENTS WHERE seq=#{seq}
+	</delete>
+
+</mapper>
