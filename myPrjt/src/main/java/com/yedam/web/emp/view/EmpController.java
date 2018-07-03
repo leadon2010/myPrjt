@@ -48,7 +48,7 @@ public class EmpController {
 
 	@RequestMapping("emp/chart")
 	public void getEmpChart() {
-
+		//return "emp/chart";
 	}
 
 	@RequestMapping("emp/getDeptCnt")
