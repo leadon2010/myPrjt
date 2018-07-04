@@ -32,10 +32,10 @@
 		      ,SALARY       as "salary"
 		      ,JOB_ID       as "jobId"
 		      ,EMAIL        as "email"
-		      ,DEPARTMENT_ID as "departmentId"
-		      ,(SELECT DEPARTMENT_NAME
+		      ,NVL(DEPARTMENT_ID,-1) as "departmentId"
+		      ,NVL((SELECT DEPARTMENT_NAME
 		        FROM   HR.DEPARTMENTS D
-		        WHERE D.DEPARTMENT_ID = E.DEPARTMENT_ID) as "departmentName"
+		        WHERE D.DEPARTMENT_ID = E.DEPARTMENT_ID),' ') as "departmentName"
 		FROM HR.EMPLOYEES E
 		]]>
 		<where>

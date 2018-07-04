@@ -10,7 +10,7 @@ public class Scheduler {
 
 	Date tday = new Date();
 
-	@Scheduled(cron = "0/20 0/1 11 * * *")
+	@Scheduled(cron = "0 0/10 11 * * *")
 	public void doCron() {
 		tday = new Date();
 		System.out.println("오전 11시 1분간격으로 실행" + tday);
