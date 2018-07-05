@@ -15,8 +15,7 @@ import com.yedam.web.emp.EmpVO;
 import com.yedam.web.emp.impl.EmpDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:config/applicationContext.xml",
-		"classpath:config/transactionContext.xml" })
+@ContextConfiguration(locations = { "classpath:config/applicationContext.xml", "classpath:config/transactionContext.xml" })
 public class EmpServiceClient {
 	@Autowired
 	EmpDAO dao;
