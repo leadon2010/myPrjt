@@ -39,6 +39,7 @@ public class CommonExcelView extends AbstractXlsxView {
 			}
 		}
 		// body 출력
+		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = (List<Map<String, Object>>) model.get("datas");
 		System.out.println(list);
 		if (headers != null) {
