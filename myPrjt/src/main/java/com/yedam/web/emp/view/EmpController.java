@@ -50,6 +50,12 @@ public class EmpController {
 	@Autowired
 	EmpService empService;
 
+	@RequestMapping("/getEmpListAjax")
+	@ResponseBody
+	public List<Map<String, Object>> getEmpListAjax() {
+		return empService.getEmpList();
+	}
+
 	@RequestMapping("/getEmpList")
 	public String getEmpList(HttpServletRequest request, EmpVO vo) {
 		request.setAttribute("empList", empService.getEmpList(vo));
